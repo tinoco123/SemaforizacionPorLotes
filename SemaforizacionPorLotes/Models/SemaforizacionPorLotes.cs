@@ -60,12 +60,12 @@ namespace SemaforoPorLotes.Models
             generalDetailReportQueryRq.ORReportPeriod.ReportPeriod.FromReportDate.SetValue(reportDataTime);            
             generalDetailReportQueryRq.ReportItemFilter.ORReportItemFilter.ItemTypeFilter.SetValue(ENItemTypeFilter.itfInventoryAndAssembly);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItem);
-            //generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItemDesc);
-            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icQuantityOnHand);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItemDesc);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icQuantity);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icSerialOrLotNumber);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnType);            
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icName);            
-            //generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnID);                      
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnID);                      
         }
     }
 }

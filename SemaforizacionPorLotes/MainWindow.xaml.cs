@@ -32,6 +32,7 @@ namespace SemaforizacionPorLotes
             if (user.Username == "CLE")
             {
                 AdjustInventoryReportBtn.Visibility = Visibility.Visible;
+                Recalc_Btn.Visibility = Visibility.Visible;
             }
             User = user;
             UserName.Content = User.Username;
@@ -244,6 +245,13 @@ namespace SemaforizacionPorLotes
                     }                                        
                 }
             }
+        }
+
+        private void Recalc_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Recalc recalc = new Recalc();
+            this.Close();
+            recalc.Show();
         }
     }
 }

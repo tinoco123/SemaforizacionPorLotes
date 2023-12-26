@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SemaforizacionPorLotes"
         mc:Ignorable="d"
-        Title="Semaforización por lotes" Width="1280" Height="720"
+        Title="Semaforización por lotes" WindowState="Maximized"
         d:DesignHeight="800" d:DesignWidth="1368"
-        Icon="SEMAFORO4.png"
-        SizeChanged="Window_SizeChanged"
+        Icon="SEMAFORO4.png"        
         MinWidth="1100"
         >
     <Grid>
@@ -29,6 +28,7 @@
             <Button x:Name="AdjustInventoryReportBtn" Cursor="Hand" Width="200" Visibility="Hidden" Click="AdjustInventoryReportBtn_Click" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100 0 0 0" Background="#153e74" Foreground="White" Height="40" BorderBrush="White" BorderThickness="3" FontWeight="SemiBold">
                 Reporte de ajustes de inventario
             </Button>
+            <Button x:Name="Recalc_Btn" Cursor="Hand" Width="100" Visibility="Hidden" Click="Recalc_Btn_Click" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="300 0 0 0" Background="#153e74" Foreground="White" Height="40" BorderBrush="White" BorderThickness="3" FontWeight="SemiBold">Recalcular</Button>
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image Source="/SEMAFORO4.png" Height="50" Margin="0 0 13 0"></Image>
                 <Label Foreground="White" FontSize="24" FontWeight="Bold">Semaforización por lotes</Label>

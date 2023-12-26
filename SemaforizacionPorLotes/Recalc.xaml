@@ -1,4 +1,4 @@
-﻿<Window x:Class="SemaforizacionPorLotes.GenerateAdjustInventoryReport"
+﻿<Window x:Class="SemaforizacionPorLotes.Recalc"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,10 +24,10 @@
             <Image Source="logo.jpg" HorizontalAlignment="Left" Margin="15 8 8 8" VerticalAlignment="Center"></Image>
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image Source="/SEMAFORO4.png" Height="50" Margin="0 0 13 0"></Image>
-                <Label Foreground="White" FontSize="24" FontWeight="Bold">Reporte ajuste de inventario</Label>
+                <Label Foreground="White" FontSize="24" FontWeight="Bold">Recalcular información</Label>
             </WrapPanel>
             <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 20 0">
-                
+
                 <Label Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalContentAlignment="Center">Regresar</Label>
                 <Button Width="50" Background="#153e74" BorderThickness="0 0 0 0" Click="LogoutBtn_Click" Name="LogoutBtn" Cursor="Hand">
                     <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -36,24 +36,5 @@
                 </Button>
             </WrapPanel>
         </Grid>
-
-
-        <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 20 0 20">
-            <WrapPanel>
-                <Label Foreground="#FF153E74" FontSize="18" FontWeight="SemiBold" Margin="3">Fecha Inicial</Label>
-                <DatePicker Name="initialDate" Width="150" Height="25" SelectedDateChanged="initialDate_SelectedDateChanged"></DatePicker>
-
-                <Label Foreground="#FF153E74" FontSize="18" FontWeight="SemiBold" Margin="3">Fecha Final</Label>
-                <DatePicker Name="finalDate" Width="150" Height="25" SelectedDateChanged="finalDate_SelectedDateChanged"></DatePicker>
-
-                <Button Width="85" Height="40" Name="filterBtn" Click="filterBtn_Click" Background="#FF153E74" Foreground="White" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Cursor="Hand">
-                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock>Filtrar</TextBlock>
-                        <Image Source="filter-alt-regular-24.png" Width="20" Margin="2 0 0 0"></Image>
-                    </WrapPanel>
-                </Button>
-            </WrapPanel>
-        </Grid>
-
     </Grid>
 </Window>
