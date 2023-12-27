@@ -20,6 +20,7 @@ namespace SemaforoPorLotes.Utils
         private static ItemRepositoryImpl itemRepositoryImpl = new ItemRepositoryImpl();
         private static VendorRepositoryImpl vendorRepositoryImpl = new VendorRepositoryImpl();
         private static LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
+        private static TxnRepositoryImpl txnRepositoryImpl = new TxnRepositoryImpl();
         public static IEnumerable<RowData> getAllRowDataFromXmlResponse(string responseInXml)
         {
             try
@@ -29,7 +30,7 @@ namespace SemaforoPorLotes.Utils
                 {
                     IEnumerable<RowData> dataFromXml = from item in responseDocument.Descendants("DataRow")
                                                        where item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "5") != null
-                                                       orderby item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "8")?.Attribute("value")?.Value
+                                                       orderby item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "9")?.Attribute("value")?.Value
                                                        select new RowData(
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "2")?.Attribute("value")?.Value,
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "3")?.Attribute("value")?.Value,
@@ -63,109 +64,42 @@ namespace SemaforoPorLotes.Utils
 
         public static void processAllDatFromXmlResponse(IEnumerable<RowData> dataFromXml)
         {
-
-            // Problema alterno, quickbooks solo me sigue retornando aunque yo le indique un datetime todas las transacciones de ese dia
-            if (dataFromXml != null)
+            if (dataFromXml != null && dataFromXml.Count() >= 1)
             {
-                int rowDataCount = dataFromXml.Count();
-                if (rowDataCount == 1)
-                {                    
-                    RowData rowData = dataFromXml.First();
-                    TxnRepositoryImpl txnRepositoryImpl = new TxnRepositoryImpl();                    
-                    bool exists = txnRepositoryImpl.GetTxnId(rowData.TxnId);
-                    if (!exists)
+                var enumerator = dataFromXml.GetEnumerator();
+                string lastTxnId = dataFromXml.First().TxnId;
+                RowData lastRowData = dataFromXml.Last();
+                while (enumerator.MoveNext())
+                {
+                    var currentRowData = enumerator.Current;
+                    bool exists = txnRepositoryImpl.GetTxnId(currentRowData.TxnId);
+                    if (exists)
                     {
-                        txnRepositoryImpl.InsertTxn(rowData.TxnId);
-                        int rowDataQuantity = Convert.ToInt32(double.Parse(rowData.Quantity));
-                        if (rowDataQuantity != 0)
+                        continue;
+                    } else
+                    {
+                        if(currentRowData.TxnId != lastTxnId)
                         {
-                            processRowData(rowData, rowDataQuantity, rowData.Vendor);
+                            bool lastTxnIdExists = txnRepositoryImpl.GetTxnId(lastTxnId);
+                            if (!lastTxnIdExists)
+                            {
+                                txnRepositoryImpl.InsertTxn(lastTxnId);
+                            }
+                        }
+
+                        int quantity = Convert.ToInt32(float.Parse(currentRowData.Quantity));
+                        string vendor = "";
+                        if (currentRowData.Type == "Bill" || currentRowData.Type == "Item Receipt")
+                        {
+                            vendor = currentRowData.Vendor;
+                        }
+                        processRowData(currentRowData, quantity, vendor);
+                        lastTxnId = currentRowData.TxnId;
+                        if (currentRowData == lastRowData)
+                        {
+                            txnRepositoryImpl.InsertTxn(lastTxnId);
                         }
                     }
-                    
-                }
-                else if (rowDataCount > 0)
-                {                   
-                    RowData lastRowData = dataFromXml.ElementAt(0);
-                    RowData lastRowDataInList = dataFromXml.Last();
-                    string vendor = "";
-                    int quantity = 0;
-                    string currentTxnId = "";
-                    string lastTxnId = lastRowData.TxnId;
-                    
-                    TxnRepositoryImpl txnRepositoryImpl = new TxnRepositoryImpl();                    
-                    foreach (RowData rowData in dataFromXml)
-                    {
-                        // Checar si la transaccion existe
-                        // Si existe, saltar el flujo
-                        // si no existe insertarla en la bd y continuar con el flujo
-                        bool exists = txnRepositoryImpl.GetTxnId(rowData.TxnId);//3f
-                        if (exists)
-                        {
-                            lastTxnId = rowData.TxnId;
-                            continue;
-                        }
-                        else
-                        {
-                            quantity = Convert.ToInt32(float.Parse(rowData.Quantity));                            
-                            currentTxnId = rowData.TxnId;//3f
-                            if (currentTxnId == lastTxnId)
-                            {                                
-                                
-                                if (rowData.Type == "Bill" || rowData.Type == "Item Receipt")
-                                {
-                                    vendor = rowData.Vendor;
-                                }
-                                lastRowData = rowData;
-                                
-                                if (quantity != 0)
-                                {
-                                    processRowData(rowData, quantity, vendor);
-                                }
-                                if (rowData == lastRowDataInList)
-                                {
-                                    txnRepositoryImpl.InsertTxn(rowData.TxnId);
-                                }
-                                
-                            }
-                            else
-                            {
-                                exists = txnRepositoryImpl.GetTxnId(lastTxnId);
-
-                                //3f
-                                
-                                if (exists)
-                                {
-                                    lastTxnId = currentTxnId;
-                                    if (rowData == lastRowDataInList)
-                                    {
-                                        txnRepositoryImpl.InsertTxn(rowData.TxnId);
-                                        processRowData(rowData, quantity, vendor);
-                                    }
-                                    continue;
-                                }
-                                else if (quantity != 0)
-                                {
-                                    lastRowData = rowData;
-                                    if (rowData.Type == "Bill" || rowData.Type == "Item Receipt")
-                                    {
-                                        vendor = rowData.Vendor;
-                                    }
-                                    else
-                                    {
-                                        vendor = "";
-                                    }
-                                    processRowData(lastRowData, quantity, vendor);  // Se inserta en BD valores de ese item y lot number
-                                    
-                                }
-
-                                // Se reinician todos los valores a los actuales
-                                                               
-                                lastTxnId = currentTxnId;                 
-                            }
-                        }                             
-                    }   
-                    
                 }
             }
             
