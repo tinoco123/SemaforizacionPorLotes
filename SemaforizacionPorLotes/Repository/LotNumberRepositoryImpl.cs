@@ -138,5 +138,28 @@ namespace SemaforoPorLotes.Repository
             }
             return result;
         }
+    
+        public bool DeleteDataFromInitialDate(string initialDate)
+        {
+            bool result = false;
+            try
+            {
+                string query = "DELETE FROM lot_numbers where date(@initial_date) <= date(last_update);";
+                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
+                {
+                    connection.Open();
+                    SQLiteCommand command = connection.CreateCommand();
+                    command.CommandText = query;
+                    command.Parameters.AddWithValue("@initial_date", initialDate);
+                    command.ExecuteNonQuery();
+                    result = true;
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+            return result;
+        }
     }
 }

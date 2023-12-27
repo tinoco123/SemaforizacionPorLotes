@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SemaforoPorLotes;
+using SemaforoPorLotes.Repository;
 
 namespace SemaforizacionPorLotes
 {
@@ -37,8 +39,11 @@ namespace SemaforizacionPorLotes
             DateTime dateSelected = (DateTime)initialDate.SelectedDate;
             if  (dateSelected != null)
             {
+                LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
+                lotNumberRepositoryImpl.DeleteDataFromInitialDate(dateSelected.ToString("yyyy-MM-dd"));
+
                 string xmlResponse = ReporteRecalculo.GenerateReportForRecalcInformation(dateSelected);
-                IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);
+                IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);              
                 ReporteRecalculo.ProcessAllRowData(rowDatas);
                 MessageBox.Show("Información actualizada correctamente", "Operación exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
             }
