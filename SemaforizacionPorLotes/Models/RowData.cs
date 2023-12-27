@@ -23,11 +23,15 @@
             Date = date;
         }
 
-        public RowData(string itemName, string quantity, string lotNumber) : this()
+        public RowData(string itemName, string itemDesc, string quantity, string lotNumber, string type, string vendor, string date) : this()
         {
             ItemName = itemName;
+            ItemDesc = itemDesc;
             Quantity = quantity;
             LotNumber = lotNumber;
+            Type = type;
+            Vendor = vendor;
+            Date = date;
         }
 
         public static bool operator ==(RowData rowData1, RowData rowData2)

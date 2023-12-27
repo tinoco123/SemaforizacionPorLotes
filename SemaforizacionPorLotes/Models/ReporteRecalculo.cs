@@ -65,9 +65,13 @@ namespace SemaforoPorLotes.Models
             generalDetailReportQueryRq.GeneralDetailReportType.SetValue(ENGeneralDetailReportType.gdrtInventoryValuationDetail);
             generalDetailReportQueryRq.ORReportPeriod.ReportPeriod.FromReportDate.SetValue(reportDataTime);
             generalDetailReportQueryRq.ReportItemFilter.ORReportItemFilter.ItemTypeFilter.SetValue(ENItemTypeFilter.itfInventoryAndAssembly);
-            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItem);            
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItem);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItemDesc);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icQuantityOnHand);
-            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icSerialOrLotNumber);    
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icSerialOrLotNumber);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnType);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icName);            
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icDate);
         }
 
         public static IEnumerable<RowData> getAllRowDataFromXmlResponse(string responseInXml)
@@ -78,11 +82,15 @@ namespace SemaforoPorLotes.Models
                 if (responseDocument != null)
                 {
                     IEnumerable<RowData> dataFromXml = from item in responseDocument.Descendants("DataRow")
-                                                       where item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "4") != null                                                       
+                                                       where item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "5") != null                                                       
                                                        select new RowData(
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "2")?.Attribute("value")?.Value,
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "3")?.Attribute("value")?.Value,
-                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "4")?.Attribute("value")?.Value                                                           
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "4")?.Attribute("value")?.Value,                                                           
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "5")?.Attribute("value")?.Value,                                                           
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "6")?.Attribute("value")?.Value,                                                           
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "7")?.Attribute("value")?.Value,                                                           
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "8")?.Attribute("value")?.Value                    
                                                            );
                     using (var writer = new StreamWriter("./data.csv"))
                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
