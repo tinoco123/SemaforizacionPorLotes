@@ -171,7 +171,7 @@ namespace SemaforoPorLotes.Utils
             
         }
 
-        public static void processRowData(RowData rowData, int quantity, string vendor)
+        public static void processRowData(RowData rowData, int quantity, string vendor, bool quantityOnHand = false)
         {
             // Validate item
             int itemId = -1;
@@ -222,8 +222,15 @@ namespace SemaforoPorLotes.Utils
                 }
                 else // O Actualizar quantity  y vendor del lotnumber
                 {
-                    int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
-                    lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
+                    if (quantityOnHand)
+                    {
+                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity, rowData.Date);
+                    }else
+                    {
+                        int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
+                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
+                    }
+                    
                 }
             }
         }

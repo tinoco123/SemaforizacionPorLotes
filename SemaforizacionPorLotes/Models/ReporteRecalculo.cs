@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
+using SemaforoPorLotes.Utils;
 
 namespace SemaforoPorLotes.Models
 {
@@ -119,30 +120,16 @@ namespace SemaforoPorLotes.Models
             {
                 ItemRepositoryImpl itemRepositoryImpl = new ItemRepositoryImpl();
                 LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
+                VendorRepositoryImpl vendorRepositoryImpl = new VendorRepositoryImpl();
                 foreach (RowData rowData in rowDatas)
                 {
                     int quantityOnHand = Convert.ToInt32(float.Parse(rowData.Quantity));
-                    string itemName = rowData.ItemName;
-                    string lotNumber = rowData.LotNumber;
-
-                    int itemId = itemRepositoryImpl.GetItemId(itemName);
-                    if (itemId != -1)
+                    string vendor = "";
+                    if (rowData.Type == "Bill" || rowData.Type == "Item Receipt")
                     {
-                        int lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, lotNumber);
-                        if (lotNumberId != -1)
-                        {
-                            lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantityOnHand, rowData.Date);
-                        }
-                        else
-                        {
-                            continue;
-                        }
+                        vendor = rowData.Vendor;
                     }
-                    else
-                    {
-                        continue;
-                    }
-                    
+                    LoadData.processRowData(rowData, quantityOnHand, vendor, true);
                 }
             }
         }
