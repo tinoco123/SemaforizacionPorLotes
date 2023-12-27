@@ -211,19 +211,19 @@ namespace SemaforoPorLotes.Utils
                 {
                     if (vendorId == -1)
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, expirationDate);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, expirationDate, rowData.Date);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
                     }
                     else
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate, rowData.Date);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
                     }
                 }
                 else // O Actualizar quantity  y vendor del lotnumber
                 {
                     int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
-                    lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity);
+                    lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
                 }
             }
         }

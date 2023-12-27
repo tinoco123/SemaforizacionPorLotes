@@ -123,7 +123,7 @@ namespace SemaforoPorLotes.Models
                         int lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, lotNumber);
                         if (lotNumberId != -1)
                         {
-                            lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantityOnHand);
+                            lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantityOnHand, rowData.Date);
                         }
                         else
                         {
