@@ -1,5 +1,6 @@
 ﻿using System.Data.SQLite;
 using SemaforoPorLotes.Models;
+using SemaforoPorLotes.Utils;
 using System.Windows;
 
 namespace SemaforoPorLotes.Repository
@@ -11,22 +12,18 @@ namespace SemaforoPorLotes.Repository
             bool access = false;
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT * FROM users WHERE username = @username AND password = @password";
+                command.Parameters.AddWithValue("@username", user.Username);
+                command.Parameters.AddWithValue("@password", user.Password);
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    var command = connection.CreateCommand();
-                    command.CommandText = @"SELECT * FROM users WHERE username = @username AND password = @password";
-                    command.Parameters.AddWithValue("@username", user.Username);
-                    command.Parameters.AddWithValue("@password", user.Password);
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            access = true;
-                        }
+                        access = true;
                     }
                 }
-                
             }
             catch (SQLiteException ex)
             {                

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using SemaforoPorLotes.Utils;
 
 namespace SemaforoPorLotes.Repository
 {
@@ -53,89 +54,89 @@ namespace SemaforoPorLotes.Repository
                         query += " AND datetime(l.expiration_date) <= datetime(@final_date)";
                     }
                 }
-                using(SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
-                {
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = query;
-                    //Assign parameters
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                //Assign parameters
 
-                    if (parameters != null)
+                if (parameters != null)
+                {
+                    if (parameters.ContainsKey("@vendor_id"))
                     {
-                        if (parameters.ContainsKey("@vendor_id"))
-                        {
-                            command.Parameters.AddWithValue("@vendor_id", parameters["@vendor_id"]);
-                        }
-                        if (parameters.ContainsKey("@item_id"))
-                        {
-                            command.Parameters.AddWithValue("@item_id", parameters["@item_id"]);
-                        }
-                        if (parameters.ContainsKey("@expiration_date"))
-                        {
-                            command.Parameters.AddWithValue("@expiration_date", parameters["@expiration_date"]);
-                        }
-                        if (parameters.ContainsKey("@days_to_expire"))
-                        {
-                            command.Parameters.AddWithValue("@days_to_expire", parameters["@days_to_expire"]);
-                        }
-                        if (parameters.ContainsKey("initial_date"))
-                        {                            
-                            command.Parameters.AddWithValue("@initial_date", parameters["initial_date"]);                            
-                        }
-                        if (parameters.ContainsKey("final_date"))
-                        {                            
-                            command.Parameters.AddWithValue("@final_date", parameters["final_date"]);                            
-                        }
+                        command.Parameters.AddWithValue("@vendor_id", parameters["@vendor_id"]);
                     }
-                    
-                    connection.Open();
-                    using(SQLiteDataReader reader = command.ExecuteReader())
+                    if (parameters.ContainsKey("@item_id"))
                     {
-                        while(reader.Read())
-                        {
-                            LotNumbersView lotNumberView = new LotNumbersView();
-                            string itemName = reader.GetString(0);
-                            string itemDesc = reader.GetString(1);
-                            string lotNumber = reader.GetString(2);
-                            int quantity = reader.GetInt32(3);
-                            string expirationDate = reader.GetString(4);
-                            if (expirationDate == "Sin caducidad")
-                            {
-                                lotNumberView.Color = "Blanco";
-                            }else if (expirationDate == "No definido")
-                            {
-                                lotNumberView.Color = "Morado";
-                            }
-                            if (!reader.IsDBNull(5))
-                            {
-                                int daysToExpire = Convert.ToInt32(reader.GetDouble(5));
-                                lotNumberView.DaysToExpire = daysToExpire;
-                                if (daysToExpire <= 30)
-                                {
-                                    lotNumberView.Color = "Rojo";
-                                }
-                                else if (daysToExpire <= 90)
-                                {
-                                    lotNumberView.Color = "Tomate";
-                                }
-                                else if (daysToExpire > 90)
-                                {
-                                    lotNumberView.Color = "Verde";
-                                }
-                            }                            
-                            if (!reader.IsDBNull(6))  // Vendor
-                            {
-                                lotNumberView.Vendor = reader.GetString(6);
-                            }
-                            lotNumberView.ExpirationDate = expirationDate;
-                            lotNumberView.ItemName = itemName;
-                            lotNumberView.ItemDesc = itemDesc;
-                            lotNumberView.LotNumber = lotNumber;
-                            lotNumberView.Quantity = quantity;
-                            lotNumbersList.Add(lotNumberView);
-                        }
+                        command.Parameters.AddWithValue("@item_id", parameters["@item_id"]);
+                    }
+                    if (parameters.ContainsKey("@expiration_date"))
+                    {
+                        command.Parameters.AddWithValue("@expiration_date", parameters["@expiration_date"]);
+                    }
+                    if (parameters.ContainsKey("@days_to_expire"))
+                    {
+                        command.Parameters.AddWithValue("@days_to_expire", parameters["@days_to_expire"]);
+                    }
+                    if (parameters.ContainsKey("initial_date"))
+                    {
+                        command.Parameters.AddWithValue("@initial_date", parameters["initial_date"]);
+                    }
+                    if (parameters.ContainsKey("final_date"))
+                    {
+                        command.Parameters.AddWithValue("@final_date", parameters["final_date"]);
                     }
                 }
-            }catch(SQLiteException ex)
+
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        LotNumbersView lotNumberView = new LotNumbersView();
+                        string itemName = reader.GetString(0);
+                        string itemDesc = reader.GetString(1);
+                        string lotNumber = reader.GetString(2);
+                        int quantity = reader.GetInt32(3);
+                        string expirationDate = reader.GetString(4);
+                        if (expirationDate == "Sin caducidad")
+                        {
+                            lotNumberView.Color = "Blanco";
+                        }
+                        else if (expirationDate == "No definido")
+                        {
+                            lotNumberView.Color = "Morado";
+                        }
+                        if (!reader.IsDBNull(5))
+                        {
+                            int daysToExpire = Convert.ToInt32(reader.GetDouble(5));
+                            lotNumberView.DaysToExpire = daysToExpire;
+                            if (daysToExpire <= 30)
+                            {
+                                lotNumberView.Color = "Rojo";
+                            }
+                            else if (daysToExpire <= 90)
+                            {
+                                lotNumberView.Color = "Tomate";
+                            }
+                            else if (daysToExpire > 90)
+                            {
+                                lotNumberView.Color = "Verde";
+                            }
+                        }
+                        if (!reader.IsDBNull(6))  // Vendor
+                        {
+                            lotNumberView.Vendor = reader.GetString(6);
+                        }
+                        lotNumberView.ExpirationDate = expirationDate;
+                        lotNumberView.ItemName = itemName;
+                        lotNumberView.ItemDesc = itemDesc;
+                        lotNumberView.LotNumber = lotNumber;
+                        lotNumberView.Quantity = quantity;
+                        lotNumbersList.Add(lotNumberView);
+                    }
+                }
+
+            }
+            catch(SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Error al cargar datos de la tabla", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -148,22 +149,20 @@ namespace SemaforoPorLotes.Repository
             vendorList.Add(new Vendor(0, "Seleccionar Proveedor"));
             try
             {
-                using(SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT id, vendor_name FROM vendors";
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = "SELECT id, vendor_name FROM vendors";
-                    connection.Open();
-                    using(SQLiteDataReader reader =  command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {                            
-                            int id = reader.GetInt32(0);
-                            string vendorName = reader.GetString(1);
-                            vendorList.Add(new Vendor(id, vendorName));
-                        }
+                        int id = reader.GetInt32(0);
+                        string vendorName = reader.GetString(1);
+                        vendorList.Add(new Vendor(id, vendorName));
                     }
                 }
-            }catch(SQLiteException ex)
+            }
+            catch(SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Error al obtener la lista de proveedores", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -176,19 +175,16 @@ namespace SemaforoPorLotes.Repository
             itemsList.Add(new Item(0, "Seleccionar Item"));
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT id, item_name FROM items";
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = "SELECT id, item_name FROM items";
-                    connection.Open();
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            string itemName = reader.GetString(1);
-                            itemsList.Add(new Item(id, itemName));
-                        }
+                        int id = reader.GetInt32(0);
+                        string itemName = reader.GetString(1);
+                        itemsList.Add(new Item(id, itemName));
                     }
                 }
             }

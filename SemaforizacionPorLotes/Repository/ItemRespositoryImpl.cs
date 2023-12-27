@@ -1,5 +1,6 @@
 ﻿using System.Data.SQLite;
 using SemaforoPorLotes.Models;
+using SemaforoPorLotes.Utils;
 using System.Windows.Forms;
 
 namespace SemaforoPorLotes.Repository
@@ -11,23 +12,20 @@ namespace SemaforoPorLotes.Repository
             int itemId = -1;
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                string query = @"SELECT id FROM items WHERE item_name = @item_name";
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@item_name", itemName);
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    string query = @"SELECT id FROM items WHERE item_name = @item_name";
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = query;
-                    command.Parameters.AddWithValue("@item_name", itemName);
-                    connection.Open();
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            itemId = reader.GetInt32(0);
-                        }
+                        itemId = reader.GetInt32(0);
                     }
                 }
             }
-            catch(SQLiteException ex)
+            catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }
@@ -40,18 +38,15 @@ namespace SemaforoPorLotes.Repository
             try
             {
                 string query = @"INSERT INTO items(item_name, item_desc) VALUES(@item_name, @item_desc)";
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
-                {
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = query;
-                    command.Parameters.AddWithValue("@item_name", item.ItemName);
-                    command.Parameters.AddWithValue("@item_desc", item.ItemDesc);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    result = true;
-                }
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@item_name", item.ItemName);
+                command.Parameters.AddWithValue("@item_desc", item.ItemDesc);
+                command.ExecuteNonQuery();
+                result = true;
             }
-            catch(SQLiteException ex)
+            catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }

@@ -144,6 +144,7 @@
     <Compile Include="Repository\UserRepositoryImpl.cs" />
     <Compile Include="Repository\VendorRepositoryImpl.cs" />
     <Compile Include="TableViewModel.cs" />
+    <Compile Include="Utils\DbConnection.cs" />
     <Compile Include="Utils\LoadData.cs" />
     <Page Include="GenerateAdjustInventoryReport.xaml">
       <SubType>Designer</SubType>

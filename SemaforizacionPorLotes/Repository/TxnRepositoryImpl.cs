@@ -1,6 +1,7 @@
 ﻿using System.Data.SQLite;
 using System.Windows.Forms;
 using SemaforoPorLotes.Models;
+using SemaforoPorLotes.Utils;
 namespace SemaforoPorLotes.Repository
 {
     public class TxnRepositoryImpl : ITxnRepository
@@ -11,21 +12,17 @@ namespace SemaforoPorLotes.Repository
             try
             {
                 string query = @"SELECT 1 FROM txns WHERE txn_id = @txn_id";
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
-                {                    
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = query;
-                    command.Parameters.AddWithValue("@txn_id", txnId);                    
-                    connection.Open();
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@txn_id", txnId);
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            exists = true;
-                        }
+                        exists = true;
                     }
-                    
-                }                
+                }
             }
             catch (SQLiteException ex)
             {
@@ -40,16 +37,12 @@ namespace SemaforoPorLotes.Repository
             try
             {
                 string query = @"INSERT INTO txns(txn_id) VALUES(@txn_id)";
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=./semaforo.db"))
-                {
-                    SQLiteCommand command = connection.CreateCommand();
-                    command.CommandText = query;
-                    command.Parameters.AddWithValue("@txn_id", txnId);                    
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    
-                    result = true;
-                }
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@txn_id", txnId);
+                command.ExecuteNonQuery();
+                result = true;
             }
             catch (SQLiteException ex)
             {
