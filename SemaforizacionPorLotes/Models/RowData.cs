@@ -9,8 +9,9 @@
         public string Type { get; set; }
         public string Vendor { get; set; }
         public string TxnId { get; set; }
+        public string Date { get; set; }
 
-        public RowData(string itemName, string itemDesc, string quantity, string lotNumber, string type, string vendor, string txnId)
+        public RowData(string itemName, string itemDesc, string quantity, string lotNumber, string type, string vendor, string date, string txnId)
         {
             ItemName = itemName;
             ItemDesc = itemDesc;
@@ -19,6 +20,7 @@
             Type = type;
             Vendor = vendor;
             TxnId = txnId;
+            Date = date;
         }
 
         public RowData(string itemName, string quantity, string lotNumber) : this()

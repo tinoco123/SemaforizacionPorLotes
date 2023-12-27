@@ -65,7 +65,8 @@ namespace SemaforoPorLotes.Models
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icSerialOrLotNumber);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnType);            
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icName);            
-            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnID);                      
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icTxnID);
+            generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icDate);            
         }
     }
 }

@@ -37,7 +37,8 @@ namespace SemaforoPorLotes.Utils
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "5")?.Attribute("value")?.Value,
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "6")?.Attribute("value")?.Value,
                                                            item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "7")?.Attribute("value")?.Value,
-                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "8")?.Attribute("value")?.Value
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "8")?.Attribute("value")?.Value,
+                                                           item.Elements("ColData").FirstOrDefault(col => col?.Attribute("colID")?.Value == "9")?.Attribute("value")?.Value
                                                            );
                     using (var writer = new StreamWriter("./data.csv"))
                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
