@@ -125,6 +125,7 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\InventoryAdjustmentLineRet.cs" />
+    <Compile Include="Models\ReporteRecalculo.cs" />
     <Compile Include="Models\Txn.cs" />
     <Compile Include="Recalc.xaml.cs">
       <DependentUpon>Recalc.xaml</DependentUpon>

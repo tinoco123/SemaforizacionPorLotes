@@ -20,7 +20,14 @@
             Vendor = vendor;
             TxnId = txnId;
         }
-        
+
+        public RowData(string itemName, string quantity, string lotNumber) : this()
+        {
+            ItemName = itemName;
+            Quantity = quantity;
+            LotNumber = lotNumber;
+        }
+
         public static bool operator ==(RowData rowData1, RowData rowData2)
         {
             return rowData1.Equals(rowData2);

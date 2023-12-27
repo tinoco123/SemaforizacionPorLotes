@@ -36,5 +36,18 @@
                 </Button>
             </WrapPanel>
         </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 20 0 20">
+            <WrapPanel>
+                <Label Foreground="#FF153E74" FontSize="18" FontWeight="SemiBold" Margin="3">Fecha Inicial</Label>
+                <DatePicker Name="initialDate" Width="150" Height="25" SelectedDateChanged="initialDate_SelectedDateChanged"></DatePicker>
+
+                <Button Width="150" Height="40" Name="recalc_Btn" Click="recalc_Btn_Click" Background="#FF153E74" Foreground="White" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Cursor="Hand">
+                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock>Iniciar Recalculo</TextBlock>
+                    </WrapPanel>
+                </Button>
+            </WrapPanel>
+        </Grid>
     </Grid>
 </Window>

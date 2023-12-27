@@ -84,7 +84,7 @@ namespace SemaforoPorLotes.Repository
                 MessageBox.Show(ex.Message, "Error");
             }
             return result;
-        }
+        }       
 
         public bool SaveLotNumber(LotNumber lotNumber)
         {

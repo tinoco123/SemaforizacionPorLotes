@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SemaforoPorLotes.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,27 @@ namespace SemaforizacionPorLotes
             MainWindow mainWindow = new MainWindow(new SemaforoPorLotes.Models.User("CLE"));
             this.Close();
             mainWindow.Show();
+        }
+
+        private void recalc_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime dateSelected = (DateTime)initialDate.SelectedDate;
+            if  (dateSelected != null)
+            {
+                string xmlResponse = ReporteRecalculo.GenerateReportForRecalcInformation(dateSelected);
+                IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);
+                ReporteRecalculo.ProcessAllRowData(rowDatas);
+                MessageBox.Show("Información actualizada correctamente", "Operación exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Selecciona una fecha", "Campo obligatorio", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void initialDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
