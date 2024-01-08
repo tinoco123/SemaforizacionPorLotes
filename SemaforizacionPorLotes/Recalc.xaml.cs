@@ -40,7 +40,7 @@ namespace SemaforizacionPorLotes
             if  (dateSelected != null)
             {
                 LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
-                lotNumberRepositoryImpl.DeleteDataFromInitialDate(dateSelected.ToString("yyyy-MM-dd"));
+                // lotNumberRepositoryImpl.DeleteDataFromInitialDate(dateSelected.ToString("yyyy-MM-dd"));
 
                 string xmlResponse = ReporteRecalculo.GenerateReportForRecalcInformation(dateSelected);
                 IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);              

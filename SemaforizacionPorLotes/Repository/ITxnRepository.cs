@@ -5,5 +5,6 @@ namespace SemaforoPorLotes.Repository
     {
         bool GetTxnId(string txnId);
         bool InsertTxn(string txnId);
+        // bool InsertTxnHistory(Txn txn);
     }
 }

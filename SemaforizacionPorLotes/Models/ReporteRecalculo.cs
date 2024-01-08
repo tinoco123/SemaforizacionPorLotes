@@ -123,13 +123,13 @@ namespace SemaforoPorLotes.Models
                 VendorRepositoryImpl vendorRepositoryImpl = new VendorRepositoryImpl();
                 foreach (RowData rowData in rowDatas)
                 {
-                    int quantityOnHand = Convert.ToInt32(float.Parse(rowData.Quantity));
                     string vendor = "";
                     if (rowData.Type == "Bill" || rowData.Type == "Item Receipt")
                     {
                         vendor = rowData.Vendor;
                     }
-                    LoadData.processRowData(rowData, quantityOnHand, vendor, true);
+                    // Insertar operacion en historial
+                    // Actualizar vendedor solamente 
                 }
             }
         }
