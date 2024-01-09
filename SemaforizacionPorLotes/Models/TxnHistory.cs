@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SemaforizacionPorLotes.Models
 {
-    class TxnHistory
+    public class TxnHistory
     {
         public int LotNumberId { get; set; }
         public int Quantity { get; set; }

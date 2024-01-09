@@ -135,6 +135,7 @@
     <Compile Include="Repository\ILotNumberRepository.cs" />
     <Compile Include="Repository\ISyncRepository.cs" />
     <Compile Include="Repository\ItemRespositoryImpl.cs" />
+    <Compile Include="Repository\ITxnHistoryRepository.cs" />
     <Compile Include="Repository\ITxnRepository.cs" />
     <Compile Include="Repository\IUserRepository.cs" />
     <Compile Include="Repository\IVendorRepository.cs" />
