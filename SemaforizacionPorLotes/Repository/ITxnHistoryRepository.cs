@@ -10,6 +10,6 @@ namespace SemaforizacionPorLotes.Repository
     public interface ITxnHistoryRepository
     {
         bool InsertTxnHistory(TxnHistory txnHistory);
-        void DeleteHistoryFromInitialDate(string date);
+        bool DeleteHistoryFromInitialDate(string date);
     }
 }
