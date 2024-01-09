@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 namespace SemaforizacionPorLotes.Repository
 {
-    public class TxnHistoryRepositoyImpl : ITxnHistoryRepository
+    public class TxnHistoryRepositoryImpl : ITxnHistoryRepository
     {
-        bool ITxnHistoryRepository.DeleteHistoryFromInitialDate(string initial_date)
+        public bool DeleteHistoryFromInitialDate(string initial_date)
         {
             bool result = false;
             try
@@ -27,7 +27,7 @@ namespace SemaforizacionPorLotes.Repository
             return result;
         }
 
-        bool ITxnHistoryRepository.InsertTxnHistory(TxnHistory txnHistory)
+        public bool InsertTxnHistory(TxnHistory txnHistory)
         {
             bool result = false;
             try

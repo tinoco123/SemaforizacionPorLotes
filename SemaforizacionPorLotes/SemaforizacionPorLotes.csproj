@@ -142,7 +142,7 @@
     <Compile Include="Repository\LotNumberRepositoryImpl.cs" />
     <Compile Include="Repository\LotNumbersTableData.cs" />
     <Compile Include="Repository\SyncRepositoryImpl.cs" />
-    <Compile Include="Repository\TxnHistoryRepositoyImpl.cs" />
+    <Compile Include="Repository\TxnHistoryRepositoryImpl.cs" />
     <Compile Include="Repository\TxnRepositoryImpl.cs" />
     <Compile Include="Repository\UserRepositoryImpl.cs" />
     <Compile Include="Repository\VendorRepositoryImpl.cs" />

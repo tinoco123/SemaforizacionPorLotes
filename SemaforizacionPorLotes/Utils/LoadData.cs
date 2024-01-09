@@ -1,17 +1,16 @@
-﻿using QBFC14Lib;
+﻿using CsvHelper;
+using SemaforizacionPorLotes.Models;
+using SemaforizacionPorLotes.Repository;
 using SemaforoPorLotes.Models;
 using SemaforoPorLotes.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml;
-using System.IO;
-using CsvHelper;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace SemaforoPorLotes.Utils
 {
@@ -21,6 +20,8 @@ namespace SemaforoPorLotes.Utils
         private static VendorRepositoryImpl vendorRepositoryImpl = new VendorRepositoryImpl();
         private static LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
         private static TxnRepositoryImpl txnRepositoryImpl = new TxnRepositoryImpl();
+        private static TxnHistoryRepositoryImpl txnHistoryRepositoryImpl = new TxnHistoryRepositoryImpl();
+
         public static IEnumerable<RowData> getAllRowDataFromXmlResponse(string responseInXml)
         {
             try
@@ -76,9 +77,10 @@ namespace SemaforoPorLotes.Utils
                     if (exists)
                     {
                         continue;
-                    } else
+                    }
+                    else
                     {
-                        if(currentRowData.TxnId != lastTxnId)
+                        if (currentRowData.TxnId != lastTxnId)
                         {
                             bool lastTxnIdExists = txnRepositoryImpl.GetTxnId(lastTxnId);
                             if (!lastTxnIdExists)
@@ -102,7 +104,7 @@ namespace SemaforoPorLotes.Utils
                     }
                 }
             }
-            
+
         }
 
         public static void processRowData(RowData rowData, int quantity, string vendor, bool quantityOnHand = false)
@@ -111,7 +113,7 @@ namespace SemaforoPorLotes.Utils
             int itemId = -1;
             if (rowData.ItemName != "")
             {
-                
+
                 itemId = itemRepositoryImpl.GetItemId(rowData.ItemName);
                 if (itemId == -1)
                 {
@@ -125,7 +127,7 @@ namespace SemaforoPorLotes.Utils
             // Validate vendor
             int vendorId = -1;
             if (vendor != null && vendor != "")
-            {                
+            {
                 vendorId = vendorRepositoryImpl.GetVendorId(vendor);
                 if (vendorId == -1)
                 {
@@ -136,7 +138,7 @@ namespace SemaforoPorLotes.Utils
             }
 
             string expirationDate = getExpirationDateFromLotNumber(rowData.LotNumber);
-            
+
             if (itemId != -1)
             {
                 int lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, rowData.LotNumber);
@@ -152,6 +154,7 @@ namespace SemaforoPorLotes.Utils
                     {
                         LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate, rowData.Date);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
+                        lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, rowData.LotNumber);
                     }
                 }
                 else // O Actualizar quantity  y vendor del lotnumber
@@ -159,13 +162,14 @@ namespace SemaforoPorLotes.Utils
                     if (quantityOnHand)
                     {
                         lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity, rowData.Date);
-                    }else
+                    }
+                    else
                     {
                         int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
                         lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
                     }
-                    
                 }
+                txnHistoryRepositoryImpl.InsertTxnHistory(new TxnHistory(lotNumberId, quantity, rowData.Date));
             }
         }
 
