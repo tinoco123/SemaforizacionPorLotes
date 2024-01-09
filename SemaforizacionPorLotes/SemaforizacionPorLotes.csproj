@@ -127,6 +127,7 @@
     <Compile Include="Models\InventoryAdjustmentLineRet.cs" />
     <Compile Include="Models\ReporteRecalculo.cs" />
     <Compile Include="Models\Txn.cs" />
+    <Compile Include="Models\TxnHistory.cs" />
     <Compile Include="Recalc.xaml.cs">
       <DependentUpon>Recalc.xaml</DependentUpon>
     </Compile>
