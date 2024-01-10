@@ -18,6 +18,20 @@
             ExpirationDate = expirationDate;
             LastUpdate = lastUpdate;
         }
+        
+        public LotNumber(string lotNumberName, int itemId, int vendorId, string expirationDate)
+        {
+            LotNumberName = lotNumberName;
+            ItemId = itemId;
+            VendorId = vendorId;
+            ExpirationDate = expirationDate;
+        } 
+        public LotNumber(string lotNumberName, int itemId, string expirationDate)
+        {
+            LotNumberName = lotNumberName;
+            ItemId = itemId;
+            ExpirationDate = expirationDate;
+        }
 
         public LotNumber(string lotNumberName, int quantity, int itemId, string expirationDate, string lastUpdate)
         {

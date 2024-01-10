@@ -58,6 +58,7 @@ namespace SemaforoPorLotes.Models
             IGeneralDetailReportQuery generalDetailReportQueryRq = requestMsgSet.AppendGeneralDetailReportQueryRq();
             generalDetailReportQueryRq.GeneralDetailReportType.SetValue(ENGeneralDetailReportType.gdrtInventoryValuationDetail);            
             generalDetailReportQueryRq.ORReportPeriod.ReportPeriod.FromReportDate.SetValue(reportDataTime);            
+            generalDetailReportQueryRq.ORReportPeriod.ReportPeriod.ToReportDate.SetValue(new DateTime(2023,12,31));            
             generalDetailReportQueryRq.ReportItemFilter.ORReportItemFilter.ItemTypeFilter.SetValue(ENItemTypeFilter.itfInventoryAndAssembly);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItem);
             generalDetailReportQueryRq.IncludeColumnList.Add(ENIncludeColumn.icItemDesc);

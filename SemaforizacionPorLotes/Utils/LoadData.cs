@@ -87,13 +87,12 @@ namespace SemaforoPorLotes.Utils
                             }
                         }
 
-                        int quantity = Convert.ToInt32(float.Parse(currentRowData.Quantity));
                         string vendor = "";
                         if (currentRowData.Type == "Bill" || currentRowData.Type == "Item Receipt")
                         {
                             vendor = currentRowData.Vendor;
                         }
-                        processRowData(currentRowData, quantity, vendor);
+                        processRowData(currentRowData, vendor);
                         lastTxnId = currentRowData.TxnId;
                         if (currentRowData == lastRowData)
                         {
@@ -105,7 +104,7 @@ namespace SemaforoPorLotes.Utils
             
         }
 
-        public static void processRowData(RowData rowData, int quantity, string vendor, bool quantityOnHand = false)
+        public static void processRowData(RowData rowData, string vendor, bool quantityOnHand = false)
         {
             // Validate item
             int itemId = -1;
@@ -145,26 +144,21 @@ namespace SemaforoPorLotes.Utils
                 {
                     if (vendorId == -1)
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, expirationDate, rowData.Date);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, itemId, expirationDate);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
                     }
                     else
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate, rowData.Date);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, itemId, vendorId, expirationDate);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
                     }
                 }
-                else // O Actualizar quantity  y vendor del lotnumber
+                else
                 {
-                    if (quantityOnHand)
+                    if(vendorId != -1)
                     {
-                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity, rowData.Date);
-                    }else
-                    {
-                        int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
-                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
+                        lotNumberRepositoryImpl.UpdateVendor(lotNumberId, vendorId);
                     }
-                    
                 }
             }
         }

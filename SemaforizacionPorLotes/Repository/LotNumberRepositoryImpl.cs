@@ -102,11 +102,11 @@ namespace SemaforoPorLotes.Repository
 
                 if (lotNumber.VendorId > 0)
                 {
-                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, vendor_id, expiration_date, last_update) VALUES (@lot_number, @quantity, @item_id, @vendor_id, @expiration_date, @last_update)";
+                    query = @"INSERT INTO lot_numbers (lot_number, item_id, vendor_id, expiration_date) VALUES (@lot_number, @item_id, @vendor_id, @expiration_date)";
                 }
                 else
                 {
-                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, expiration_date, last_update) VALUES (@lot_number, @quantity, @item_id, @expiration_date, @last_update)";
+                    query = @"INSERT INTO lot_numbers (lot_number, item_id, expiration_date) VALUES (@lot_number, @item_id, @expiration_date)";
                 }
                 SQLiteConnection connection = DbConnection.Instance.GetConnection();
                 SQLiteCommand command = connection.CreateCommand();
@@ -115,11 +115,9 @@ namespace SemaforoPorLotes.Repository
                 {
                     command.Parameters.AddWithValue("@vendor_id", lotNumber.VendorId);
                 }
-                command.Parameters.AddWithValue("@quantity", lotNumber.Quantity);
                 command.Parameters.AddWithValue("@lot_number", lotNumber.LotNumberName);
                 command.Parameters.AddWithValue("@item_id", lotNumber.ItemId);
                 command.Parameters.AddWithValue("@expiration_date", lotNumber.ExpirationDate);
-                command.Parameters.AddWithValue("@last_update", lotNumber.LastUpdate);
 
                 command.ExecuteNonQuery();
                 result = true;
@@ -149,6 +147,27 @@ namespace SemaforoPorLotes.Repository
                 MessageBox.Show(ex.Message, "Error");
             }
             return result;
+        }
+
+        public bool UpdateVendor(int lotNumberId, int vendor_id)
+        {
+            bool result = false;
+            try
+            {
+                string query = "UPDATE lot_numbers SET vendor_id = @vendor_id WHERE id = @lot_number_id";
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@vendor_id", vendor_id);
+                command.Parameters.AddWithValue("@lot_number_id", lotNumberId);
+                command.ExecuteNonQuery();
+                result = true;
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+            return false;
         }
     }
 }

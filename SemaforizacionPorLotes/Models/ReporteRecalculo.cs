@@ -129,7 +129,7 @@ namespace SemaforoPorLotes.Models
                     {
                         vendor = rowData.Vendor;
                     }
-                    LoadData.processRowData(rowData, quantityOnHand, vendor, true);
+                    // LoadData.processRowData(rowData, quantityOnHand, vendor, true);
                 }
             }
         }

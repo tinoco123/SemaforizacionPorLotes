@@ -8,6 +8,7 @@ namespace SemaforoPorLotes.Repository
         bool UpdateLotNumberQuantity(int lotNumberId, int quantity, string date);
         int GetLotNumberId(int itemId, string lotNumber);
         bool SaveLotNumber(LotNumber lotNumber);
+        bool UpdateVendor(int lotNumberId, int vendor_id);
         bool DeleteDataFromInitialDate(string initialDate);
     }
 }
