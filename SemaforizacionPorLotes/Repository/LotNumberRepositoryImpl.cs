@@ -60,29 +60,17 @@ namespace SemaforoPorLotes.Repository
             return quantity;
         }
 
-        public bool UpdateLotNumberQuantity(int lotNumberId, int quantity, string date)
+        public bool UpdateLotNumberQuantity(int lotNumberId, int quantity)
         {
             bool result = false;
-            string query = "";
             try
             {
-                if (date != "")
-                {
-                    query = @"UPDATE lot_numbers SET quantity = @quantity, last_update = @last_update WHERE id = @id";
-                }
-                else
-                {
-                    query = @"UPDATE lot_numbers SET quantity = @quantity WHERE id = @id";
-                }
+                string query = @"UPDATE lot_numbers SET quantity = @quantity WHERE id = @id";
 
                 SQLiteConnection connection = DbConnection.Instance.GetConnection();
                 SQLiteCommand command = connection.CreateCommand();
                 command.CommandText = query;
-                command.Parameters.AddWithValue("@quantity", quantity);
-                if (date != "")
-                {
-                    command.Parameters.AddWithValue("@last_update", date);
-                }
+                command.Parameters.AddWithValue("@quantity", quantity);                
                 command.Parameters.AddWithValue("@id", lotNumberId);
                 command.ExecuteNonQuery();
             }
@@ -102,11 +90,11 @@ namespace SemaforoPorLotes.Repository
 
                 if (lotNumber.VendorId > 0)
                 {
-                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, vendor_id, expiration_date, last_update) VALUES (@lot_number, @quantity, @item_id, @vendor_id, @expiration_date, @last_update)";
+                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, vendor_id, expiration_date) VALUES (@lot_number, @quantity, @item_id, @vendor_id, @expiration_date)";
                 }
                 else
                 {
-                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, expiration_date, last_update) VALUES (@lot_number, @quantity, @item_id, @expiration_date, @last_update)";
+                    query = @"INSERT INTO lot_numbers (lot_number, quantity, item_id, expiration_date) VALUES (@lot_number, @quantity, @item_id, @expiration_date)";
                 }
                 SQLiteConnection connection = DbConnection.Instance.GetConnection();
                 SQLiteCommand command = connection.CreateCommand();
@@ -119,7 +107,6 @@ namespace SemaforoPorLotes.Repository
                 command.Parameters.AddWithValue("@lot_number", lotNumber.LotNumberName);
                 command.Parameters.AddWithValue("@item_id", lotNumber.ItemId);
                 command.Parameters.AddWithValue("@expiration_date", lotNumber.ExpirationDate);
-                command.Parameters.AddWithValue("@last_update", lotNumber.LastUpdate);
 
                 command.ExecuteNonQuery();
                 result = true;
@@ -129,26 +116,6 @@ namespace SemaforoPorLotes.Repository
                 MessageBox.Show(ex.Message, "Error");
             }
             return result;
-        }
-
-        public bool DeleteDataFromInitialDate(string initialDate)
-        {
-            bool result = false;
-            try
-            {
-                string query = "DELETE FROM lot_numbers where date(@initial_date) <= date(last_update);";
-                SQLiteConnection connection = DbConnection.Instance.GetConnection();
-                SQLiteCommand command = connection.CreateCommand();
-                command.CommandText = query;
-                command.Parameters.AddWithValue("@initial_date", initialDate);
-                command.ExecuteNonQuery();
-                result = true;
-            }
-            catch (SQLiteException ex)
-            {
-                MessageBox.Show(ex.Message, "Error");
-            }
-            return result;
-        }
+        }        
     }
 }

@@ -147,26 +147,26 @@ namespace SemaforoPorLotes.Utils
                 {
                     if (vendorId == -1)
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, expirationDate, rowData.Date);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, expirationDate);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
                     }
                     else
                     {
-                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate, rowData.Date);
+                        LotNumber lotNumber = new LotNumber(rowData.LotNumber, quantity, itemId, vendorId, expirationDate);
                         lotNumberRepositoryImpl.SaveLotNumber(lotNumber);
-                        lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, rowData.LotNumber);
                     }
+                    lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, rowData.LotNumber);
                 }
                 else // O Actualizar quantity  y vendor del lotnumber
                 {
                     if (quantityOnHand)
                     {
-                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity, rowData.Date);
+                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity);
                     }
                     else
                     {
                         int oldQuantity = lotNumberRepositoryImpl.GetLotNumberQuantity(lotNumberId);
-                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity, rowData.Date);
+                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, quantity + oldQuantity);
                     }
                 }
                 txnHistoryRepositoryImpl.InsertTxnHistory(new TxnHistory(lotNumberId, quantity, rowData.Date));

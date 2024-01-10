@@ -5,9 +5,8 @@ namespace SemaforoPorLotes.Repository
     public interface ILotNumberRepository
     {
         int GetLotNumberQuantity(int lotNumberId);
-        bool UpdateLotNumberQuantity(int lotNumberId, int quantity, string date);
+        bool UpdateLotNumberQuantity(int lotNumberId, int quantity);
         int GetLotNumberId(int itemId, string lotNumber);
-        bool SaveLotNumber(LotNumber lotNumber);
-        bool DeleteDataFromInitialDate(string initialDate);
+        bool SaveLotNumber(LotNumber lotNumber);        
     }
 }

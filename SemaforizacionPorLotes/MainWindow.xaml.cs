@@ -240,7 +240,7 @@ namespace SemaforizacionPorLotes
                         LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
                         int itemId = itemRepositoryImpl.GetItemId(row.ItemName);
                         int lotNumberId = lotNumberRepositoryImpl.GetLotNumberId(itemId, row.LotNumber);
-                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, Convert.ToInt32(editedValue), "");
+                        lotNumberRepositoryImpl.UpdateLotNumberQuantity(lotNumberId, Convert.ToInt32(editedValue));
                         MessageBox.Show("Cantidad ajustada correctamente", "Operación exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
                     }                                        
                 }
