@@ -81,6 +81,28 @@ namespace SemaforoPorLotes.Repository
             return result;
         }
 
+        public bool UpdateLotNumberQuantity(int lotNumberId, int quantity, int initialQuantity)
+        {
+            bool result = false;
+            try
+            {
+                string query = @"UPDATE lot_numbers SET quantity = @quantity, initial_quantity = @initial_quantity WHERE id = @id";
+
+                SQLiteConnection connection = DbConnection.Instance.GetConnection();
+                SQLiteCommand command = connection.CreateCommand();
+                command.CommandText = query;
+                command.Parameters.AddWithValue("@quantity", quantity);
+                command.Parameters.AddWithValue("@initial_quantity", initialQuantity);
+                command.Parameters.AddWithValue("@id", lotNumberId);
+                command.ExecuteNonQuery();
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+            return result;
+        }
+
         public bool SaveLotNumber(LotNumber lotNumber)
         {
             bool result = false;

@@ -1,4 +1,5 @@
-﻿using SemaforoPorLotes.Models;
+﻿using SemaforizacionPorLotes.Utils;
+using SemaforoPorLotes.Models;
 using SemaforoPorLotes.Repository;
 using System.Windows;
 
@@ -24,9 +25,10 @@ namespace SemaforizacionPorLotes
                 bool access = userRepositoryImpl.login(user);
                 if (access)
                 {
-                    LoadingData loadingData = new LoadingData(user);
-                    this.Close();
-                    loadingData.Show();
+                    //LoadingData loadingData = new LoadingData(user);
+                    //this.Close();
+                    //loadingData.Show();
+                    AjusteCantidadInicial.ajustarCantidadInicial();
 
                 }
                 else
