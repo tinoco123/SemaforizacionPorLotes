@@ -37,16 +37,23 @@ namespace SemaforizacionPorLotes
         private void recalc_Btn_Click(object sender, RoutedEventArgs e)
         {
             DateTime dateSelected = (DateTime)initialDate.SelectedDate;
-            if  (dateSelected != null)
+            int isDateBefore2024 = DateTime.Compare(dateSelected, new DateTime(2024, 1, 1));
+            if (isDateBefore2024 < 0)
             {
-                LotNumberRepositoryImpl lotNumberRepositoryImpl = new LotNumberRepositoryImpl();
-                // lotNumberRepositoryImpl.DeleteDataFromInitialDate(dateSelected.ToString("yyyy-MM-dd"));
-
-                string xmlResponse = ReporteRecalculo.GenerateReportForRecalcInformation(dateSelected);
-                IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);              
-                ReporteRecalculo.ProcessAllRowData(rowDatas);
-                MessageBox.Show("Información actualizada correctamente", "Operación exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Selecciona una fecha mayor o igual al 1 de enero del 2024", "Fecha incorrecta", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+            else if  (dateSelected != null)
+            {
+                string xmlResponse = ReporteRecalculo.GenerateReportForRecalcInformation(dateSelected);
+                if (xmlResponse != null)
+                {
+                    // Borrar informacion a partir de la fecha seleccionada
+                    IEnumerable<RowData> rowDatas = ReporteRecalculo.getAllRowDataFromXmlResponse(xmlResponse);
+                    ReporteRecalculo.ProcessAllRowData(rowDatas);
+                    MessageBox.Show("Información actualizada correctamente", "Operación exitosa", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                
+            }            
             else
             {
                 MessageBox.Show("Selecciona una fecha", "Campo obligatorio", MessageBoxButton.OK, MessageBoxImage.Warning);
